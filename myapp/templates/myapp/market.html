@@ -1,0 +1,113 @@
+{% extends 'myapp/base.html' %}
+
+{% block title %}Market Trends{% endblock %}
+
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+
+<section class="bg-gradient-to-r from-emerald-600 to-emerald-800 py-14 text-center">
+    <h1 class="text-5xl font-extrabold text-gray-900 drop-shadow-lg">
+        🌾 <span class="bg-white/30 px-6 py-4 rounded-lg">Live Market Prices</span> 🌿
+    </h1>
+</section>
+
+<main class="bg-emerald-50 py-12">
+    <div class="container mx-auto px-6 sm:px-8 lg:px-10">
+        <!-- 🔍 Search Form -->
+        <form method="get" action="{% url 'market' %}" class="mb-10 bg-white p-8 rounded-xl shadow-xl flex flex-wrap gap-6 justify-center items-center">
+            <div class="w-full md:w-1/4">
+                <label for="search_query" class="block text-gray-700 font-semibold mb-2">🔍 Search Commodity</label>
+                <input type="text" name="search_query" id="search_query" value="{{ search_query }}"
+                    class="w-full px-5 py-3 border-2 border-emerald-500 rounded-lg focus:outline-none focus:ring-4 focus:ring-emerald-300">
+            </div>
+
+            <div class="w-full md:w-1/4">
+                <label for="search_state" class="block text-gray-700 font-semibold mb-2">📍 Search State</label>
+                <input type="text" name="search_state" id="search_state" value="{{ search_state }}"
+                    class="w-full px-5 py-3 border-2 border-emerald-500 rounded-lg focus:outline-none focus:ring-4 focus:ring-emerald-300">
+            </div>
+
+            <button type="submit"
+                class="px-6 py-3 bg-emerald-600 text-white text-lg font-semibold rounded-lg hover:bg-emerald-700">
+                🔎 Search
+            </button>
+        </form>
+
+        {% if error_message %}
+        <p class="text-center text-red-500 font-medium text-lg mt-6 animate-bounce">
+            {{ error_message }}
+        </p>
+        {% elif market_data and market_data.paginator.count > 0 %}
+        
+        <!-- 📊 Table -->
+        <div class="overflow-x-auto mt-6">
+            <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead class="bg-emerald-600 text-white">
+                    <tr>
+                        <th class="p-3 text-left">Commodity</th>
+                        <th class="p-3 text-left">Variety</th>
+                        <th class="p-3 text-left">Grade</th>
+                        <th class="p-3 text-left">Market</th>
+                        <th class="p-3 text-left">District</th>
+                        <th class="p-3 text-left">State</th>
+                        <th class="p-3 text-left">Arrival Date</th>
+                        <th class="p-3 text-left">Min Price</th>
+                        <th class="p-3 text-left">Max Price</th>
+                        <th class="p-3 text-left">Modal Price</th>
+                        <th class="p-3 text-left">Commodity Code</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-300">
+                    {% if market_data %}
+                        {% for item in market_data %}
+                        <tr class="hover:bg-emerald-100 transition-all even:bg-gray-100">
+                            <td class="p-3 border">{{ item.Commodity }}</td>
+                            <td class="p-3 border">{{ item.Variety }}</td>
+                            <td class="p-3 border">{{ item.Grade }}</td>
+                            <td class="p-3 border">{{ item.Market }}</td>
+                            <td class="p-3 border">{{ item.District }}</td>
+                            <td class="p-3 border">{{ item.State }}</td>
+                            <td class="p-3 border text-blue-600 font-semibold">{{ item.Arrival_Date }}</td>
+                            <td class="p-3 border text-green-600 font-semibold">₹{{ item.Min_Price }}</td>
+                            <td class="p-3 border text-red-600 font-semibold">₹{{ item.Max_Price }}</td>
+                            <td class="p-3 border font-bold bg-emerald-100/60">₹{{ item.Modal_Price }}</td>
+                            <td class="p-3 border text-gray-500 text-xs">{{ item.Commodity_Code }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="11" class="text-center text-red-500 font-semibold p-5">No Results Found</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-center mt-6 space-x-3">
+            {% if market_data.has_previous %}
+            <a href="{{ base_url }}{{ market_data.previous_page_number }}"
+                class="px-6 py-3 bg-emerald-600 text-white text-lg rounded-lg hover:bg-emerald-700">
+                ◀ Previous
+            </a>
+            {% endif %}
+
+            <span class="px-4 py-2 bg-gray-200 rounded-lg">
+                Page {{ market_data.number }} of {{ market_data.paginator.num_pages }}
+            </span>
+
+            {% if market_data.has_next %}
+            <a href="{{ base_url }}{{ market_data.next_page_number }}"
+                class="px-6 py-3 bg-emerald-600 text-white text-lg rounded-lg hover:bg-emerald-700">
+                Next ▶
+            </a>
+            {% endif %}
+        </div>
+
+        {% else %}
+        <p class="text-center text-gray-500">No results found. Try a different search.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}
