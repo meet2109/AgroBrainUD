@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -13,7 +14,7 @@ SECRET_KEY = 'django-insecure-33u1*+(ce50jea81^zqez%f41)zqfd&7lt0h8cd(e0^nsc-0tb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [agrobrainud.onrender.com]
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -73,6 +74,7 @@ DATABASES = {
     }
 }
 
+DATABASES["default"]= dj_database_url.parse("postgresql://agrobrain_ud_user:aIf5adVDpivOiQnZ7JaVe9LxAywk5h8t@dpg-cvq1nq3e5dus739rvlvg-a.singapore-postgres.render.com/agrobrain_ud")
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
