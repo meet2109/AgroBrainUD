@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: agrobrain
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn myproject.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: myproject.settings
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agrobrain-db
+          property: connectionString
+
+databases:
+  - name: agrobrain-db
+    plan: free
