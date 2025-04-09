@@ -183,7 +183,27 @@
                         <a href="/resources" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">Resources</a>
                         <a href="/services" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">Services</a>
                         <a href="/plant-health" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">Plant Health</a>
+                    
+                        {% if user.is_authenticated %}
+                        <div class="border-t border-gray-200 mt-2 pt-2">
+                            <div class="px-3 py-2">
+                                <p class="text-sm font-semibold text-green-600">Hello, {{ user.first_name|title }} {{ user.last_name|title }}</p>
+                                <p class="text-sm text-gray-500">{{ user.email }}</p>
+                            </div>
+                            {% if user.polygon_id %}
+                            <div class="px-3 py-2 text-sm text-gray-600">
+                                Polygon ID: {{ user.polygon_id }}
+                            </div>
+                            {% endif %}
+                            <a href="{% url 'logout' %}" class="block w-full text-left px-3 py-2 mt-2 text-base font-medium text-red-600 hover:bg-red-100 rounded-lg">
+                                Logout
+                            </a>
+                        </div>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="block px-3 py-2 text-base font-medium text-green-600 hover:bg-green-100">Sign In</a>
+                        {% endif %}
                     </div>
+                    
                 </div>
             </header>
 
