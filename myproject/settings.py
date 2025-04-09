@@ -70,13 +70,8 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
 }
-
-DATABASES["default"]= dj_database_url.parse("postgresql://agrobrain_ud_user:aIf5adVDpivOiQnZ7JaVe9LxAywk5h8t@dpg-cvq1nq3e5dus739rvlvg-a.singapore-postgres.render.com/agrobrain_ud")
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
