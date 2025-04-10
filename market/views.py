@@ -26,42 +26,38 @@ def fetch_market_data(limit=500):
         return records
     return []
 
+from urllib.parse import urlencode
+
 def market_view(request):
-    """
-    Render the market prices page with arrival date and full details.
-    """
     search_query = request.GET.get('search_query', '').strip().lower()
     search_state = request.GET.get('search_state', '').strip().lower()
     page = request.GET.get('page', 1)
 
-    # Fetch all data
     data = fetch_market_data()
 
-    # 🔹 Debug: Print the first 5 results
-    if not data:
-        print("⚠️ No data received from API!")
-
-    # 🔹 Filtering Logic
     if search_query:
         data = [item for item in data if search_query in item.get("Commodity", "").lower()]
-    
+
     if search_state:
         data = [item for item in data if search_state in item.get("State", "").lower()]
 
-    # 🔹 Debugging
-    print("Filtered Data (First 5):", json.dumps(data[:5], indent=2))
-
-    # Pagination (50 items per page)
     paginator = Paginator(data, 50)
     try:
         page_obj = paginator.page(page)
-    except PageNotAnInteger:
+    except (EmptyPage, PageNotAnInteger):
         page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
+
+    # 🔗 Rebuild base URL for pagination (preserve filters)
+    query_dict = {}
+    if search_query:
+        query_dict["search_query"] = search_query
+    if search_state:
+        query_dict["search_state"] = search_state
+    base_url = "?{}&page=".format(urlencode(query_dict)) if query_dict else "?page="
 
     return render(request, "myapp/market.html", {
         "market_data": page_obj,
         "search_query": search_query,
-        "search_state": search_state
+        "search_state": search_state,
+        "base_url": base_url
     })
