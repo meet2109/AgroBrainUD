@@ -38,7 +38,7 @@
             {{ error_message }}
         </p>
         {% elif market_data and market_data.paginator.count > 0 %}
-        
+
         <!-- 📊 Table -->
         <div class="overflow-x-auto mt-6">
             <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -58,36 +58,33 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-300">
-                    {% if market_data %}
-                        {% for item in market_data %}
-                        <tr class="hover:bg-emerald-100 transition-all even:bg-gray-100">
-                            <td class="p-3 border">{{ item.Commodity }}</td>
-                            <td class="p-3 border">{{ item.Variety }}</td>
-                            <td class="p-3 border">{{ item.Grade }}</td>
-                            <td class="p-3 border">{{ item.Market }}</td>
-                            <td class="p-3 border">{{ item.District }}</td>
-                            <td class="p-3 border">{{ item.State }}</td>
-                            <td class="p-3 border text-blue-600 font-semibold">{{ item.Arrival_Date }}</td>
-                            <td class="p-3 border text-green-600 font-semibold">₹{{ item.Min_Price }}</td>
-                            <td class="p-3 border text-red-600 font-semibold">₹{{ item.Max_Price }}</td>
-                            <td class="p-3 border font-bold bg-emerald-100/60">₹{{ item.Modal_Price }}</td>
-                            <td class="p-3 border text-gray-500 text-xs">{{ item.Commodity_Code }}</td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="11" class="text-center text-red-500 font-semibold p-5">No Results Found</td>
-                        </tr>
-                    {% endif %}
+                    {% for item in market_data %}
+                    <tr class="hover:bg-emerald-100 transition-all even:bg-gray-100">
+                        <td class="p-3 border">{{ item.commodity }}</td>
+                        <td class="p-3 border">{{ item.variety }}</td>
+                        <td class="p-3 border">{{ item.grade }}</td>
+                        <td class="p-3 border">{{ item.market }}</td>
+                        <td class="p-3 border">{{ item.district }}</td>
+                        <td class="p-3 border">{{ item.state }}</td>
+                        <td class="p-3 border text-blue-600 font-semibold">{{ item.arrival_date }}</td>
+                        <td class="p-3 border text-green-600 font-semibold">₹{{ item.min_price }}</td>
+                        <td class="p-3 border text-red-600 font-semibold">₹{{ item.max_price }}</td>
+                        <td class="p-3 border font-bold bg-emerald-100/60">₹{{ item.modal_price }}</td>
+                        <td class="p-3 border text-gray-500 text-xs">{{ item.commodity_code }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11" class="text-center text-red-500 font-semibold p-5">No Results Found</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
-            
         </div>
 
         <!-- Pagination Controls -->
         <div class="flex justify-center mt-6 space-x-3">
             {% if market_data.has_previous %}
-            <a href="{{ base_url }}{{ market_data.previous_page_number }}"
+            <a href="?page={{ market_data.previous_page_number }}&search_query={{ search_query }}&search_state={{ search_state }}"
                 class="px-6 py-3 bg-emerald-600 text-white text-lg rounded-lg hover:bg-emerald-700">
                 ◀ Previous
             </a>
@@ -98,7 +95,7 @@
             </span>
 
             {% if market_data.has_next %}
-            <a href="{{ base_url }}{{ market_data.next_page_number }}"
+            <a href="?page={{ market_data.next_page_number }}&search_query={{ search_query }}&search_state={{ search_state }}"
                 class="px-6 py-3 bg-emerald-600 text-white text-lg rounded-lg hover:bg-emerald-700">
                 Next ▶
             </a>
